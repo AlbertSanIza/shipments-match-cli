@@ -2,7 +2,7 @@
 
 ## About This
 
-This is a coding exercise requested by Platform Science and submitted by [Albert Sanchez](https://www.linkedin.com/in/albertsaniza)
+This is a coding exercise requested by Platform Science and submitted by [Albert Sanchez](https://www.linkedin.com/in/albertsaniza).
 
 ## Problem
 
@@ -16,11 +16,11 @@ The mathematical model for determining which drivers are best suited to deliver 
 
 ## Example
 
-If provided a driver file with `Daniel Davidson` on one line and an address file with `44 Fake Dr., San Diego, CA 92122` on a line, that pairing’s suitability score would be `9`
+If provided a driver file with `Daniel Davidson` on one line and an address file with `44 Fake Dr., San Diego, CA 92122` on one line, the pairing’s suitability score between those two would be `9`.
 
 ## Solution
 
-I will try to solve `44 Fake Dr., San Diego, CA 92122` in a few different ways that came to my mind because the example does not specify how much of the destination string we are actually using, or if special characters are being considered. Here are my possible inputs:
+I will try to solve `44 Fake Dr., San Diego, CA 92122` in a few different ways, because the example does not specify how much of the destination string we are actually using, or if special characters are being considered. Here are my possible inputs:
 
 | Input | Destination                        |
 | ----- | ---------------------------------- |
@@ -31,10 +31,10 @@ I will try to solve `44 Fake Dr., San Diego, CA 92122` in a few different ways t
 
 First I will check how many vowels and consonants the driver names has:
 
-| Driver            | Length | Vowels   | Consonants |
-| ----------------- | ------ | -------- | ---------- |
-| `Daniel Davidson` | 15     | `aieaio` | `DnlDvdsn` |
-| Total             |        | 6        | 8          |
+| Driver            | Length | Vowels (EVEN) | Consonants (ODD) |
+| ----------------- | ------ | ------------- | ---------------- |
+| `Daniel Davidson` | 15     | `aieaio`      | `DnlDvdsn`       |
+| Total             |        | 6             | 8                |
 
 Now I will check common factors (besides 1) for each input:
 
@@ -66,6 +66,7 @@ There are some assumptions that I might be ignoring (but I will ask about them o
 ## CLI Requirements
 
 -   [NodeJS](https://nodejs.org/en/)
+-   [NPM](https://nodejs.org/en/)
 -   [Yarn](https://yarnpkg.com/getting-started/install)
 
 ## Installation
@@ -74,6 +75,7 @@ There are some assumptions that I might be ignoring (but I will ask about them o
 $ git clone https://github.com/AlbertSanIza/shipments-match-cli.git
 $ cd shipments-match-cli
 $ yarn install
+$ npm link
 ```
 
 ## Usage
