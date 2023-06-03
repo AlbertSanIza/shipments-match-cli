@@ -80,4 +80,22 @@ $ npm link
 
 ## Usage
 
-TBD...
+```bash
+$ shipments-match-cli <destinations_file_path> <drivers_file_path>
+```
+
+With the following you will run the cli using `example_files` folder
+
+```bash
+$ yarn example
+# Under the hood is running:
+# shipments-match-cli example_files/destinations example_files/destinations
+```
+
+## Develop
+
+I added nodemon to auto-run the cli using the `example_files` after every change for easier development
+
+```bash
+$ yarn stat:dev:cli
+```
