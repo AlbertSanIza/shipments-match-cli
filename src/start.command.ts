@@ -17,8 +17,11 @@ export class StartCommand extends CommandRunner {
         // Grab input parameters
         const [destinationsFilePath, driversFilePath] = parameters
 
-        console.log(this.fileService.fileExists(destinationsFilePath))
-        console.log(this.fileService.fileExists(driversFilePath))
+        // Check if the files exist
+        if (!(this.fileService.fileExists(destinationsFilePath) && this.fileService.fileExists(driversFilePath))) {
+            return
+        }
+
         // Read files
         // Calculate all the suitability scores
         // Find the combination for maximum total suitability score
