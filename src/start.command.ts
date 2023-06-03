@@ -17,12 +17,17 @@ export class StartCommand extends CommandRunner {
         // Grab input parameters
         const [destinationsFilePath, driversFilePath] = parameters
 
-        // Check if the files exist
-        if (!(this.fileService.fileExists(destinationsFilePath) && this.fileService.fileExists(driversFilePath))) {
+        // Read files
+        const destinationsList = this.fileService.readFile(destinationsFilePath)
+        const driversList = this.fileService.readFile(driversFilePath)
+        // If the files are empty finish execution
+        if (!(destinationsList.length > 0 && driversList.length > 0)) {
             return
         }
 
-        // Read files
+        console.log('🚀 ~ destinationsList:', destinationsList)
+        console.log('🚀 ~ driversList:', driversList)
+
         // Calculate all the suitability scores
         // Find the combination for maximum total suitability score
     }
