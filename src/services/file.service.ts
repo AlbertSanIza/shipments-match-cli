@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import * as fs from 'fs'
 import * as path from 'path'
 
 @Injectable()
 export class FileService {
+    private readonly logger = new Logger(FileService.name)
+
     fileExists(filePath: string): boolean {
         try {
             // Replace any \ with /
@@ -18,6 +20,7 @@ export class FileService {
                 throw new Error()
             }
         } catch (error) {
+            this.logger.error(`"${filePath}" is not a valid file`)
             return false
         }
 
