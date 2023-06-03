@@ -1,6 +1,7 @@
 import { Command, CommandRunner } from 'nest-commander'
 
 import { FileService } from './services/file.service'
+import { RouteService } from './services/route.service'
 
 @Command({
     name: 'start',
@@ -9,7 +10,7 @@ import { FileService } from './services/file.service'
     options: { isDefault: true },
 })
 export class StartCommand extends CommandRunner {
-    constructor(private readonly fileService: FileService) {
+    constructor(private readonly fileService: FileService, private readonly routeService: RouteService) {
         super()
     }
 
@@ -25,8 +26,11 @@ export class StartCommand extends CommandRunner {
             return
         }
 
-        console.log('🚀 ~ destinationsList:', destinationsList)
-        console.log('🚀 ~ driversList:', driversList)
+        for (const destination of destinationsList) {
+            for (const driver of driversList) {
+                this.routeService.calculateSuitabilityScore(destination, driver)
+            }
+        }
 
         // Calculate all the suitability scores
         // Find the combination for maximum total suitability score
