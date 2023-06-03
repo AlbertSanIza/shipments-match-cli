@@ -7,12 +7,22 @@
     "bin": {
         "shipments-match-cli": "bin/shipments-match-cli"
     },
+    "nodemonConfig": {
+        "watch": [
+            "src"
+        ],
+        "ext": "ts",
+        "ignore": [
+            "src/**/*.spec.ts"
+        ],
+        "exec": "yarn example"
+    },
     "scripts": {
         "build": "nest build",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
         "start": "nest start",
         "start:dev": "nest start --watch",
-        "start:dev:cli": "nodemon -e ts -w src -x yarn example",
+        "start:dev:cli": "nodemon",
         "start:debug": "nest start --debug --watch",
         "start:prod": "node dist/main",
         "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -21,7 +31,7 @@
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
-        "example": "ts-node src/main.ts example_files/destinations example_files/destinations"
+        "example": "ts-node src/main.ts example_files/destinations example_files/drivers"
     },
     "dependencies": {
         "@nestjs/common": "^9.0.0",
