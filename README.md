@@ -10,9 +10,9 @@ I have to provide a CLI tool capable of pairing drivers and destinations. The ca
 
 The mathematical model for determining which drivers are best suited to deliver each shipment is the following:
 
-- If the `length` of the shipment's destination street name is `even`, the base suitability score is the `number of vowels` in the driver’s name `multiplied by 1.5`
-- If the `length` of the shipment's destination street name is `odd`, the base suitability score is the `number of consonants` in the driver’s name `multiplied by 1`
-- If the `length` of the shipment's destination street name `shares any common factors` (besides 1) with the length of the driver’s name, the base suitability score is `increased by 50%`
+-   If the `length` of the shipment's destination street name is `even`, the base suitability score is the `number of vowels` in the driver’s name `multiplied by 1.5`
+-   If the `length` of the shipment's destination street name is `odd`, the base suitability score is the `number of consonants` in the driver’s name `multiplied by 1`
+-   If the `length` of the shipment's destination street name `shares any common factors` (besides 1) with the length of the driver’s name, the base suitability score is `increased by 50%`
 
 ## Example
 
@@ -60,13 +60,13 @@ So `Input A` turned out to be the way to go.
 
 There are some assumptions that I might be ignoring (but I will ask about them on interview).
 
-- Is the EVEN/ODD BSS considered base before or after multiplying against vowels/constants length
-- Which brings me to... Is the third bullet applied to BSS before multiplying the EVEN/ODD condition?
+-   Is the EVEN/ODD BSS considered base before or after multiplying against vowels/constants length
+-   Which brings me to... Is the third bullet applied to BSS before multiplying the EVEN/ODD condition?
 
 ## CLI Requirements
 
-- [NodeJS](https://nodejs.org/en/)
-- [Yarn](https://yarnpkg.com/getting-started/install)
+-   [NodeJS](https://nodejs.org/en/)
+-   [Yarn](https://yarnpkg.com/getting-started/install)
 
 ## Installation
 
