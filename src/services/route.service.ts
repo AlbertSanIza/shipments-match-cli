@@ -23,6 +23,18 @@ export class RouteService {
             const consonantsCount = driver.replace(/[^a-zA-Z]/g, '').match(/[^aeiou]/gi).length
             suitabilityScore = consonantsCount
         }
+
+        // If the destination's length and the driver's length share a common factor besides 1, multiply the suitability score by 1.5
+        // We use the shortest string as the limit for the loop to find the common factor
+        const shortestString = Math.min(destination.length, driver.length)
+        for (let i = 2; i <= shortestString; i++) {
+            if (destination.length % i === 0 && driver.length % i === 0) {
+                // If we find a common factor, we multiply the suitability score by 1.5 and break the loop
+                suitabilityScore *= 1.5
+                break
+            }
+        }
+
         return suitabilityScore
     }
 }
