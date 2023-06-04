@@ -26,16 +26,14 @@ export class StartCommand extends CommandRunner {
             return
         }
 
+        // Calculate all the suitability scores
         const allSuitabilityScores = []
         for (const destination of destinationsList) {
             for (const driver of driversList) {
-                allSuitabilityScores.push([destination, driver, this.routeService.calculateSuitabilityScore(destination, driver)])
+                allSuitabilityScores.push(`${destination}, ${driver}, ${this.routeService.calculateSuitabilityScore(destination, driver)}`)
             }
         }
 
         console.log('🚀 ~ StartCommand ~ run ~ allSuitabilityScores:', allSuitabilityScores)
-
-        // Calculate all the suitability scores
-        // Find the combination for maximum total suitability score
     }
 }
