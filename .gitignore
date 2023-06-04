@@ -35,4 +35,4 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # misc
-/example_files/result.csv
+result.csv
