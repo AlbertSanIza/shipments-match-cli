@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common'
 import { Command, CommandRunner, Option } from 'nest-commander'
 
 import { FileService } from './services/file.service'
@@ -17,8 +16,6 @@ interface StartCommandOptions {
     options: { isDefault: true },
 })
 export class StartCommand extends CommandRunner {
-    private readonly logger = new Logger(StartCommand.name)
-
     constructor(private readonly fileService: FileService, private readonly routeService: RouteService) {
         super()
     }
@@ -42,7 +39,7 @@ export class StartCommand extends CommandRunner {
 
         // Print as table
         console.table(bestRoutes.list)
-        this.logger.log(`Total Suitability Score: ${bestRoutes.suitabilityScore}`)
+        console.log(`Total Suitability Score: ${bestRoutes.suitabilityScore}`)
 
         // Save the results in a file if -w or --write_file flag is passed to commander
         if (options.write_file) {
