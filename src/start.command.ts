@@ -17,7 +17,7 @@ interface StartCommandOptions {
     options: { isDefault: true },
 })
 export class StartCommand extends CommandRunner {
-    private readonly logger = new Logger(FileService.name)
+    private readonly logger = new Logger(StartCommand.name)
 
     constructor(private readonly fileService: FileService, private readonly routeService: RouteService) {
         super()
