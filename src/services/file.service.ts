@@ -27,7 +27,7 @@ export class FileService {
     }
 
     writeFile(content: string[]): void {
-        const filename = './example_files/result.csv'
+        const filename = './result.csv'
         const writableStream = fs.createWriteStream(filename)
         const stringifier = stringify({ header: true })
         for (const line of content) {
