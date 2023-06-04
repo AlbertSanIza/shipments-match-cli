@@ -1,7 +1,11 @@
-import { Command, CommandRunner } from 'nest-commander'
+import { Command, CommandRunner, Option } from 'nest-commander'
 
 import { FileService } from './services/file.service'
 import { RouteService } from './services/route.service'
+
+interface StartCommandOptions {
+    write_file?: boolean
+}
 
 @Command({
     name: 'start',
@@ -14,7 +18,7 @@ export class StartCommand extends CommandRunner {
         super()
     }
 
-    async run(parameters: string[]): Promise<void> {
+    async run(parameters: string[], options?: StartCommandOptions): Promise<void> {
         // Grab input parameters
         const [destinationsFilePath, driversFilePath] = parameters
 
@@ -44,7 +48,17 @@ export class StartCommand extends CommandRunner {
         // Print as table
         console.table(allSuitabilityScores)
 
-        // Save the results in a file
-        this.fileService.writeFile(allSuitabilityScores)
+        // Save the results in a file if -w or --write_file flag is passed to commander
+        if (options.write_file) {
+            this.fileService.writeFile(allSuitabilityScores)
+        }
+    }
+
+    @Option({
+        flags: '-w, --write_file',
+        description: 'Writes a result.csv file inside example_files folder',
+    })
+    runWithWriteFile(): boolean {
+        return true
     }
 }
