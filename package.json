@@ -9,9 +9,10 @@
     },
     "nodemonConfig": {
         "watch": [
-            "src"
+            "src",
+            "example_files"
         ],
-        "ext": "ts",
+        "ext": "ts, txt",
         "ignore": [
             "src/**/*.spec.ts"
         ],
