@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common'
+import { stringify } from 'csv-stringify'
 import * as fs from 'fs'
 import * as path from 'path'
 
@@ -23,6 +24,16 @@ export class FileService {
         fileContent = fileContent.map((line) => line.replace(/,(?!\s)/g, ', '))
 
         return fileContent
+    }
+
+    writeFile(content: string[]): void {
+        const filename = './example_files/result.csv'
+        const writableStream = fs.createWriteStream(filename)
+        const stringifier = stringify({ header: true })
+        for (const line of content) {
+            stringifier.write(line)
+        }
+        stringifier.pipe(writableStream)
     }
 
     private fileExists(filePath: string): boolean {
