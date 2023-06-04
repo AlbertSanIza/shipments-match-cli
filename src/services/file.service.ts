@@ -3,7 +3,7 @@ import { stringify } from 'csv-stringify'
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { Route } from '../types/route'
+import { Routes } from '../types/route'
 
 @Injectable()
 export class FileService {
@@ -28,17 +28,24 @@ export class FileService {
         return fileContent
     }
 
-    writeFile(content: Route[]): void {
+    writeFile(routes: Routes): void {
         const filename = './result.csv'
+
+        // Create a writable stream
         const writableStream = fs.createWriteStream(filename)
         const stringifier = stringify({ header: true, columns: ['Driver', 'Destination', 'Suitability Score'] })
-        for (const line of content) {
+
+        // Write the data to the stream
+        for (const route of routes.list) {
             stringifier.write({
-                Driver: line.driver,
-                Destination: line.destination,
-                'Suitability Score': line.suitabilityScore,
+                Driver: route.driver,
+                Destination: route.destination,
+                'Suitability Score': route.suitabilityScore,
             })
         }
+        stringifier.write({
+            'Suitability Score': `Total: ${routes.suitabilityScore}`,
+        })
         stringifier.pipe(writableStream)
     }
 
