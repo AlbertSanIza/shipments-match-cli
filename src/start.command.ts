@@ -30,10 +30,21 @@ export class StartCommand extends CommandRunner {
         const allSuitabilityScores = []
         for (const destination of destinationsList) {
             for (const driver of driversList) {
-                allSuitabilityScores.push(`${destination}, ${driver}, ${this.routeService.calculateSuitabilityScore(destination, driver)}`)
+                allSuitabilityScores.push({
+                    Driver: driver,
+                    Destination: destination,
+                    SS: this.routeService.calculateSuitabilityScore(driver, destination),
+                })
             }
         }
 
-        console.log('🚀 ~ StartCommand ~ run ~ allSuitabilityScores:', allSuitabilityScores)
+        // Sort the results by SS
+        allSuitabilityScores.sort((a, b) => b.SS - a.SS)
+
+        // Print as table
+        console.table(allSuitabilityScores)
+
+        // Save the results in a file
+        this.fileService.writeFile(allSuitabilityScores)
     }
 }
