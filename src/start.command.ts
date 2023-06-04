@@ -30,27 +30,21 @@ export class StartCommand extends CommandRunner {
             return
         }
 
-        // Calculate all the suitability scores
-        const allSuitabilityScores = []
-        for (const destination of destinationsList) {
-            for (const driver of driversList) {
-                allSuitabilityScores.push({
-                    Driver: driver,
-                    Destination: destination,
-                    SS: this.routeService.calculateSuitabilityScore(driver, destination),
-                })
-            }
-        }
-
-        // Sort the results by SS
-        allSuitabilityScores.sort((a, b) => b.SS - a.SS)
+        // Calculate the best combination of drivers and destinations
+        // A driver can only be assigned to one destination
+        // A destination can only be assigned to one driver
+        const routes = this.routeService.calculateRoutesV1(destinationsList, driversList)
 
         // Print as table
-        console.table(allSuitabilityScores)
+        console.table(routes)
+        // Calculate the total suitability score
+        const totalSuitabilityScore = routes.reduce((acc, route) => acc + route.suitabilityScore, 0)
+        // Print the total suitability score
+        console.log(`Total Suitability Score: ${totalSuitabilityScore}`)
 
         // Save the results in a file if -w or --write_file flag is passed to commander
         if (options.write_file) {
-            this.fileService.writeFile(allSuitabilityScores)
+            this.fileService.writeFile(routes)
         }
     }
 

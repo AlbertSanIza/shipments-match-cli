@@ -96,7 +96,7 @@ $ shipments-match-cli <destinations_file_path> <drivers_file_path> --write_file
 ```bash
 $ yarn example
 # Under the hood is running:
-# shipments-match-cli example_files/destinations example_files/destinations
+# shipments-match-cli example_files/destinations.txt example_files/destinations.txt
 ```
 
 ## Develop

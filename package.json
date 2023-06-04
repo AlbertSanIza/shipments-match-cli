@@ -9,9 +9,10 @@
     },
     "nodemonConfig": {
         "watch": [
-            "src"
+            "src",
+            "example_files"
         ],
-        "ext": "ts",
+        "ext": "ts, txt",
         "ignore": [
             "src/**/*.spec.ts"
         ],
@@ -31,7 +32,7 @@
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
-        "example": "ts-node src/main.ts example_files/destinations example_files/drivers"
+        "example": "ts-node src/main.ts example_files/destinations.txt example_files/drivers.txt"
     },
     "dependencies": {
         "@nestjs/common": "^9.0.0",
