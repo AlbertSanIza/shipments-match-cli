@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common'
 import { Command, CommandRunner, Option } from 'nest-commander'
 
 import { FileService } from './services/file.service'
@@ -7,13 +8,17 @@ interface StartCommandOptions {
     write_file?: boolean
 }
 
+// This is the command that will be executed by nest-commander
+// It can be executed by running: ts-node src/main.ts <destinations_file_path> <drivers_file_path>
 @Command({
     name: 'start',
     arguments: '<destinations_file_path> <drivers_file_path>',
-    description: 'Calculate Suitability Score for a list of Destinations and Drivers',
+    description: 'Calculate the Suitability Score for a list of Destinations and Drivers',
     options: { isDefault: true },
 })
 export class StartCommand extends CommandRunner {
+    private readonly logger = new Logger(FileService.name)
+
     constructor(private readonly fileService: FileService, private readonly routeService: RouteService) {
         super()
     }
@@ -33,18 +38,15 @@ export class StartCommand extends CommandRunner {
         // Calculate the best combination of drivers and destinations
         // A driver can only be assigned to one destination
         // A destination can only be assigned to one driver
-        const routes = this.routeService.calculateRoutesV1(destinationsList, driversList)
+        const bestRoutes = this.routeService.calculateRoutes(destinationsList, driversList)
 
         // Print as table
-        console.table(routes)
-        // Calculate the total suitability score
-        const totalSuitabilityScore = routes.reduce((acc, route) => acc + route.suitabilityScore, 0)
-        // Print the total suitability score
-        console.log(`Total Suitability Score: ${totalSuitabilityScore}`)
+        console.table(bestRoutes.list)
+        this.logger.log(`Total Suitability Score: ${bestRoutes.suitabilityScore}`)
 
         // Save the results in a file if -w or --write_file flag is passed to commander
         if (options.write_file) {
-            this.fileService.writeFile(routes)
+            this.fileService.writeFile(bestRoutes)
         }
     }
 
