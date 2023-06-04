@@ -67,7 +67,7 @@ There are some assumptions that I might be ignoring (but I will ask about them o
 
 -   [NodeJS](https://nodejs.org/en/)
 -   [NPM](https://nodejs.org/en/)
--   [Yarn](https://yarnpkg.com/getting-started/install)
+-   [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
 
 ## Installation
 
@@ -75,6 +75,7 @@ There are some assumptions that I might be ignoring (but I will ask about them o
 $ git clone https://github.com/AlbertSanIza/shipments-match-cli.git
 $ cd shipments-match-cli
 $ yarn install
+$ yarn build
 $ npm link
 ```
 
