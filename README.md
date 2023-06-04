@@ -86,6 +86,12 @@ $ shipments-match-cli <destinations_file_path> <drivers_file_path>
 
 With the following you will run the cli using `example_files` folder
 
+If you add `-w` or `--write_file` instead of just printing in console it will write a file named `result.csv` in folder where cli was executed.
+
+```bash
+$ shipments-match-cli <destinations_file_path> <drivers_file_path> --write_file
+```
+
 ```bash
 $ yarn example
 # Under the hood is running:

@@ -37,6 +37,7 @@
         "@nestjs/common": "^9.0.0",
         "@nestjs/core": "^9.0.0",
         "@nestjs/platform-express": "^9.0.0",
+        "csv-stringify": "^6.4.0",
         "nest-commander": "^3.7.1",
         "nodemon": "^2.0.22",
         "reflect-metadata": "^0.1.13",
