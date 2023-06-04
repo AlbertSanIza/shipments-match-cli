@@ -31,9 +31,13 @@ export class FileService {
     writeFile(content: Route[]): void {
         const filename = './result.csv'
         const writableStream = fs.createWriteStream(filename)
-        const stringifier = stringify({ header: true })
+        const stringifier = stringify({ header: true, columns: ['Driver', 'Destination', 'Suitability Score'] })
         for (const line of content) {
-            stringifier.write(line)
+            stringifier.write({
+                Driver: line.driver,
+                Destination: line.destination,
+                'Suitability Score': line.suitabilityScore,
+            })
         }
         stringifier.pipe(writableStream)
     }
