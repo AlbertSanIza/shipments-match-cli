@@ -67,7 +67,7 @@ There are some assumptions that I might be ignoring (but I will ask about them o
 
 -   [NodeJS](https://nodejs.org/en/)
 -   [NPM](https://nodejs.org/en/)
--   [Yarn](https://yarnpkg.com/getting-started/install)
+-   [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
 
 ## Installation
 
