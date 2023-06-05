@@ -83,9 +83,10 @@ export class RouteService {
         let highScoreList: BacktrackList[] = []
 
         const backtrack = (list: BacktrackList[], rowIndex: number) => {
-            // If we have reached the end of the matrix, calculate the suitability score for the list and update the high score if necessary
+            // If we have reached the end of the matrix, calculate the suitability score for the list
             if (rowIndex === suitabilityScoreMatrix.length) {
                 const currentScore = list.reduce((acc, item) => acc + item.value, 0)
+                // If the current score is greater than the high score, replace the high score and the high score list
                 if (currentScore > highScore) {
                     highScore = currentScore
                     highScoreList = list.slice()
@@ -95,20 +96,31 @@ export class RouteService {
 
             // Iterate through each row of the matrix
             for (let columnIndex = 0; columnIndex < suitabilityScoreMatrix[rowIndex].length; columnIndex++) {
+                // If the current list does not contain an element with the same row or column as the current index
                 if (!list.some((element) => element.row === rowIndex || element.column === columnIndex)) {
                     // Add the current indexes to the list
                     list.push({ row: rowIndex, column: columnIndex, value: suitabilityScoreMatrix[rowIndex][columnIndex] })
+                    // Call backtrack recursively with the updated list and the next row index
                     backtrack(list, rowIndex + 1)
+                    // Remove the last element from the list
                     list.pop()
                 }
             }
         }
 
+        // Start the backtracking algorithm
         backtrack([], 0)
 
+        // Populate the best routes list
         const bestRoutes = highScoreList
             .map((item) => {
                 return {
+                    // Same as before, if destinations length is greater than drivers length
+                    //      rows = drivers and columns = destinations
+                    //      run calculateSuitabilityScore(column, row)
+                    // else
+                    //      rows = destinations and columns = drivers
+                    //      run calculateSuitabilityScore(row, column)
                     destination: isDestinationsLengthGreater ? columns[item.column] : rows[item.row],
                     driver: isDestinationsLengthGreater ? rows[item.row] : columns[item.column],
                     suitabilityScore: item.value,
