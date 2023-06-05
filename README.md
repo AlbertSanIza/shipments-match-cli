@@ -106,7 +106,7 @@ $ shipments-match-cli <destinations_file_path> <drivers_file_path> --write_file
 
 ```bash
 # Run latest source code (before "yarn build")
-$ ts-node src/main.ts <destinations_file_path> <drivers_file_path>
+$ yarn ts-node src/main.ts <destinations_file_path> <drivers_file_path>
 
 # Hot reload (using nodemon)
 $ yarn start
