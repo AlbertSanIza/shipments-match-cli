@@ -8,3 +8,9 @@ export interface Route {
     driver: string
     suitabilityScore: number
 }
+
+export interface BacktrackList {
+    row: number
+    column: number
+    value: number
+}

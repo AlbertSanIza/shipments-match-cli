@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 
-import { Route, Routes } from '../types/route'
+import { BacktrackList, Route, Routes } from '../types/route'
 
 @Injectable()
 export class RouteService {
@@ -34,70 +34,46 @@ export class RouteService {
             }
         }
 
-        // Now that we have all the suitability scores in a matrix, we need to find all the unique lists
-        // that do not contain the same driver or destination more than once
-        const findUniqueLists = (matrix: number[][]): any[] => {
-            const uniqueLists: { row: number; column: number; value: number }[][] = []
-
-            // Helper function for recursive backtracking
-            function backtrack(list: { row: number; column: number; value: number }[], rowIndex: number) {
-                // If we have reached the end of the matrix, add the list to uniqueLists and return
-                if (rowIndex === matrix.length) {
-                    // Reached the end of the matrix, add a copy of the list to uniqueLists
-                    uniqueLists.push(list.slice())
-                    return
-                }
-
-                // Iterate through each row of the matrix
-                for (let columnIndex = 0; columnIndex < matrix[rowIndex].length; columnIndex++) {
-                    // If the current list does not contain an element with the same row or column as the current index
-                    if (!list.some((element) => element.row === rowIndex || element.column === columnIndex)) {
-                        // Add the current indexes to the list
-                        list.push({ row: rowIndex, column: columnIndex, value: matrix[rowIndex][columnIndex] })
-                        backtrack(list, rowIndex + 1)
-                        list.pop()
-                    }
-                }
-            }
-
-            // Start the backtracking with an empty list and index 0
-            backtrack([], 0)
-
-            return uniqueLists
-        }
-
-        // Find all the unique lists
-        const uniqueLists = findUniqueLists(suitabilityScoreMatrix)
-
-        // Find the list with the highest suitability score
-        let highScoreList = []
+        // We will use backtracking to find the best routes
         let highScore = 0
+        let highScoreList: BacktrackList[] = []
 
-        // Go through each list and calculate the total suitability score
-        for (const list of uniqueLists) {
-            const totalSuitabilityScore = list.reduce((acc, item) => acc + item.value, 0)
+        const backtrack = (list: BacktrackList[], rowIndex: number) => {
+            // If we have reached the end of the matrix, calculate the suitability score for the list and update the high score if necessary
+            if (rowIndex === suitabilityScoreMatrix.length) {
+                const currentScore = list.reduce((acc, item) => acc + item.value, 0)
+                if (currentScore > highScore) {
+                    highScore = currentScore
+                    highScoreList = list.slice()
+                }
+                return
+            }
 
-            // If the total suitability score is greater than the current high score, replace the high score and high score list
-            if (totalSuitabilityScore > highScore) {
-                highScoreList = list
-                highScore = totalSuitabilityScore
+            // Iterate through each row of the matrix
+            for (let columnIndex = 0; columnIndex < suitabilityScoreMatrix[rowIndex].length; columnIndex++) {
+                if (!list.some((element) => element.row === rowIndex || element.column === columnIndex)) {
+                    // Add the current indexes to the list
+                    list.push({ row: rowIndex, column: columnIndex, value: suitabilityScoreMatrix[rowIndex][columnIndex] })
+                    backtrack(list, rowIndex + 1)
+                    list.pop()
+                }
             }
         }
 
-        // Sort the high score list by value
-        highScoreList = highScoreList.sort((a, b) => b.value - a.value)
+        backtrack([], 0)
 
-        // Generate the list of routes
-        highScoreList = highScoreList.map((item) => {
-            return {
-                destination: isDestinationsLengthGreater ? columns[item.column] : rows[item.row],
-                driver: isDestinationsLengthGreater ? rows[item.row] : columns[item.column],
-                suitabilityScore: item.value,
-            }
-        })
+        const bestRoutes = highScoreList
+            .map((item) => {
+                return {
+                    destination: isDestinationsLengthGreater ? columns[item.column] : rows[item.row],
+                    driver: isDestinationsLengthGreater ? rows[item.row] : columns[item.column],
+                    suitabilityScore: item.value,
+                }
+            })
+            .sort((a, b) => b.suitabilityScore - a.suitabilityScore)
 
         return {
-            list: highScoreList,
+            list: bestRoutes,
             suitabilityScore: highScore,
         }
     }
