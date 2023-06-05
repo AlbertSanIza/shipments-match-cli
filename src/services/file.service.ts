@@ -33,13 +33,13 @@ export class FileService {
 
         // Create a writable stream
         const writableStream = fs.createWriteStream(filename)
-        const stringifier = stringify({ header: true, columns: ['Driver', 'Destination', 'Suitability Score'] })
+        const stringifier = stringify({ header: true, columns: ['Destination', 'Driver', 'Suitability Score'] })
 
         // Write the data to the stream
         for (const route of routes.list) {
             stringifier.write({
-                Driver: route.driver,
                 Destination: route.destination,
+                Driver: route.driver,
                 'Suitability Score': route.suitabilityScore,
             })
         }

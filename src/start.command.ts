@@ -5,6 +5,7 @@ import { RouteService } from './services/route.service'
 
 interface StartCommandOptions {
     write_file?: boolean
+    version_two?: boolean
 }
 
 // This is the command that will be executed by nest-commander
@@ -35,7 +36,9 @@ export class StartCommand extends CommandRunner {
         // Calculate the best combination of drivers and destinations
         // A driver can only be assigned to one destination
         // A destination can only be assigned to one driver
-        const bestRoutes = this.routeService.calculateRoutes(destinationsList, driversList)
+        const bestRoutes = options.version_two
+            ? this.routeService.calculateRoutesV2(destinationsList, driversList)
+            : this.routeService.calculateRoutes(destinationsList, driversList)
 
         // Print as table
         console.table(bestRoutes.list)
@@ -52,6 +55,14 @@ export class StartCommand extends CommandRunner {
         description: 'Writes a result.csv file inside example_files folder',
     })
     runWithWriteFile(): boolean {
+        return true
+    }
+
+    @Option({
+        flags: '-v2, --version_two',
+        description: 'Use the version 2 of the algorithm (slower but more accurate)',
+    })
+    runWithV2Algorithm(): boolean {
         return true
     }
 }

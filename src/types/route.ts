@@ -4,7 +4,13 @@ export interface Routes {
 }
 
 export interface Route {
-    driver: string
     destination: string
+    driver: string
     suitabilityScore: number
+}
+
+export interface BacktrackList {
+    row: number
+    column: number
+    value: number
 }

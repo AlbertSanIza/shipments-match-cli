@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 
-import { Route, Routes } from '../types/route'
+import { BacktrackList, Route, Routes } from '../types/route'
 
 @Injectable()
 export class RouteService {
@@ -10,9 +10,9 @@ export class RouteService {
         for (const destination of destinations) {
             for (const driver of drivers) {
                 allPossibleRoutes.push({
-                    driver: driver,
                     destination: destination,
-                    suitabilityScore: this.calculateSuitabilityScore(driver, destination),
+                    driver: driver,
+                    suitabilityScore: this.calculateSuitabilityScore(destination, driver),
                 })
             }
         }
@@ -45,6 +45,92 @@ export class RouteService {
         return {
             list: bestRoutes,
             suitabilityScore: totalSuitabilityScore,
+        }
+    }
+
+    calculateRoutesV2(destinations: string[], drivers: string[]): Routes {
+        // We are creating a matrix of suitability scores
+        const suitabilityScoreMatrix: number[][] = []
+
+        // If destinations length is greater than drivers length:
+        // we will set drivers as the rows and destinations as the columns
+        const isDestinationsLengthGreater = destinations.length > drivers.length
+        const rows = isDestinationsLengthGreater ? drivers : destinations
+
+        // If destinations length lower or equal than drivers length:
+        // we will set destinations as the rows and drivers as the columns
+        const columns = isDestinationsLengthGreater ? destinations : drivers
+
+        // We will iterate through the rows and columns and calculate the suitability score for each combination
+        for (let i = 0; i < rows.length; i++) {
+            suitabilityScoreMatrix[i] = []
+            for (let j = 0; j < columns.length; j++) {
+                // IMPORTANT: To use calculateSuitabilityScore the first input must be the destination and the second input must be the driver
+                // If destinations length is greater than drivers length
+                //      rows = drivers and columns = destinations
+                //      run calculateSuitabilityScore(column, row)
+                // else
+                //      rows = destinations and columns = drivers
+                //      run calculateSuitabilityScore(row, column)
+                suitabilityScoreMatrix[i][j] = isDestinationsLengthGreater
+                    ? this.calculateSuitabilityScore(columns[j], rows[i])
+                    : this.calculateSuitabilityScore(rows[i], columns[j])
+            }
+        }
+
+        // We will use backtracking to find the best routes
+        let highScore = 0
+        let highScoreList: BacktrackList[] = []
+
+        const backtrack = (list: BacktrackList[], rowIndex: number) => {
+            // If we have reached the end of the matrix, calculate the suitability score for the list
+            if (rowIndex === suitabilityScoreMatrix.length) {
+                const currentScore = list.reduce((acc, item) => acc + item.value, 0)
+                // If the current score is greater than the high score, replace the high score and the high score list
+                if (currentScore > highScore) {
+                    highScore = currentScore
+                    highScoreList = list.slice()
+                }
+                return
+            }
+
+            // Iterate through each row of the matrix
+            for (let columnIndex = 0; columnIndex < suitabilityScoreMatrix[rowIndex].length; columnIndex++) {
+                // If the current list does not contain an element with the same row or column as the current index
+                if (!list.some((element) => element.row === rowIndex || element.column === columnIndex)) {
+                    // Add the current indexes to the list
+                    list.push({ row: rowIndex, column: columnIndex, value: suitabilityScoreMatrix[rowIndex][columnIndex] })
+                    // Call backtrack recursively with the updated list and the next row index
+                    backtrack(list, rowIndex + 1)
+                    // Remove the last element from the list
+                    list.pop()
+                }
+            }
+        }
+
+        // Start the backtracking algorithm
+        backtrack([], 0)
+
+        // Populate the best routes list
+        const bestRoutes = highScoreList
+            .map((item) => {
+                return {
+                    // Same as before, if destinations length is greater than drivers length
+                    //      rows = drivers and columns = destinations
+                    //      run calculateSuitabilityScore(column, row)
+                    // else
+                    //      rows = destinations and columns = drivers
+                    //      run calculateSuitabilityScore(row, column)
+                    destination: isDestinationsLengthGreater ? columns[item.column] : rows[item.row],
+                    driver: isDestinationsLengthGreater ? rows[item.row] : columns[item.column],
+                    suitabilityScore: item.value,
+                }
+            })
+            .sort((a, b) => b.suitabilityScore - a.suitabilityScore)
+
+        return {
+            list: bestRoutes,
+            suitabilityScore: highScore,
         }
     }
 
