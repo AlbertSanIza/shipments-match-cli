@@ -4,6 +4,9 @@ import { Route, Routes } from '../types/route'
 
 @Injectable()
 export class RouteService {
+    calculateRoutesV2(destinations: string[], drivers: string[]): Routes {
+    }
+
     calculateRoutes(destinations: string[], drivers: string[]): Routes {
         // Calculate all the suitability scores for all the possible combinations of drivers and destinations
         const allPossibleRoutes: Route[] = []

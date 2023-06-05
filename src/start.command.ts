@@ -35,7 +35,7 @@ export class StartCommand extends CommandRunner {
         // Calculate the best combination of drivers and destinations
         // A driver can only be assigned to one destination
         // A destination can only be assigned to one driver
-        const bestRoutes = this.routeService.calculateRoutes(destinationsList, driversList)
+        const bestRoutes = this.routeService.calculateRoutesV2(destinationsList, driversList)
 
         // Print as table
         console.table(bestRoutes.list)
