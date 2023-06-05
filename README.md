@@ -100,6 +100,9 @@ $ shipments-match-cli <destinations_file_path> <drivers_file_path>
 
 # Add "-w" or "--write_file" flag to generate a result.csv
 $ shipments-match-cli <destinations_file_path> <drivers_file_path> --write_file
+
+# Add "-v2" or "--version_two" flag to generate a result.csv
+$ shipments-match-cli <destinations_file_path> <drivers_file_path> --version_two
 ```
 
 ## Develop
