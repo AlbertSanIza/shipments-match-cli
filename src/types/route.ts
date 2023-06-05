@@ -4,7 +4,7 @@ export interface Routes {
 }
 
 export interface Route {
-    driver: string
     destination: string
+    driver: string
     suitabilityScore: number
 }
