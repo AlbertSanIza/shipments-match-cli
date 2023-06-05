@@ -5,6 +5,101 @@ import { Route, Routes } from '../types/route'
 @Injectable()
 export class RouteService {
     calculateRoutesV2(destinations: string[], drivers: string[]): Routes {
+        // We are creating a matrix of suitability scores
+        const suitabilityScoreMatrix: number[][] = []
+
+        // If destinations length is greater than drivers length:
+        // we will set drivers as the rows and destinations as the columns
+        const isDestinationsLengthGreater = destinations.length > drivers.length
+        const rows = isDestinationsLengthGreater ? drivers : destinations
+
+        // If destinations length lower or equal than drivers length:
+        // we will set destinations as the rows and drivers as the columns
+        const columns = isDestinationsLengthGreater ? destinations : drivers
+
+        // We will iterate through the rows and columns and calculate the suitability score for each combination
+        for (let i = 0; i < rows.length; i++) {
+            suitabilityScoreMatrix[i] = []
+            for (let j = 0; j < columns.length; j++) {
+                // IMPORTANT: To use calculateSuitabilityScore the first input must be the destination and the second input must be the driver
+                // If destinations length is greater than drivers length
+                //      rows = drivers and columns = destinations
+                //      run calculateSuitabilityScore(column, row)
+                // else
+                //      rows = destinations and columns = drivers
+                //      run calculateSuitabilityScore(row, column)
+                suitabilityScoreMatrix[i][j] = isDestinationsLengthGreater
+                    ? this.calculateSuitabilityScore(columns[j], rows[i])
+                    : this.calculateSuitabilityScore(rows[i], columns[j])
+            }
+        }
+
+        // Now that we have all the suitability scores in a matrix, we need to find all the unique lists
+        // that do not contain the same driver or destination more than once
+        const findUniqueLists = (matrix: number[][]): any[] => {
+            const uniqueLists: { row: number; column: number; value: number }[][] = []
+
+            // Helper function for recursive backtracking
+            function backtrack(list: { row: number; column: number; value: number }[], rowIndex: number) {
+                // If we have reached the end of the matrix, add the list to uniqueLists and return
+                if (rowIndex === matrix.length) {
+                    // Reached the end of the matrix, add a copy of the list to uniqueLists
+                    uniqueLists.push(list.slice())
+                    return
+                }
+
+                // Iterate through each row of the matrix
+                for (let columnIndex = 0; columnIndex < matrix[rowIndex].length; columnIndex++) {
+                    // If the current list does not contain an element with the same row or column as the current index
+                    if (!list.some((element) => element.row === rowIndex || element.column === columnIndex)) {
+                        // Add the current indexes to the list
+                        list.push({ row: rowIndex, column: columnIndex, value: matrix[rowIndex][columnIndex] })
+                        backtrack(list, rowIndex + 1)
+                        list.pop()
+                    }
+                }
+            }
+
+            // Start the backtracking with an empty list and index 0
+            backtrack([], 0)
+
+            return uniqueLists
+        }
+
+        // Find all the unique lists
+        const uniqueLists = findUniqueLists(suitabilityScoreMatrix)
+
+        // Find the list with the highest suitability score
+        let highScoreList = []
+        let highScore = 0
+
+        // Go through each list and calculate the total suitability score
+        for (const list of uniqueLists) {
+            const totalSuitabilityScore = list.reduce((acc, item) => acc + item.value, 0)
+
+            // If the total suitability score is greater than the current high score, replace the high score and high score list
+            if (totalSuitabilityScore > highScore) {
+                highScoreList = list
+                highScore = totalSuitabilityScore
+            }
+        }
+
+        // Sort the high score list by value
+        highScoreList = highScoreList.sort((a, b) => b.value - a.value)
+
+        // Generate the list of routes
+        highScoreList = highScoreList.map((item) => {
+            return {
+                destination: isDestinationsLengthGreater ? columns[item.column] : rows[item.row],
+                driver: isDestinationsLengthGreater ? rows[item.row] : columns[item.column],
+                suitabilityScore: item.value,
+            }
+        })
+
+        return {
+            list: highScoreList,
+            suitabilityScore: highScore,
+        }
     }
 
     calculateRoutes(destinations: string[], drivers: string[]): Routes {
@@ -13,8 +108,8 @@ export class RouteService {
         for (const destination of destinations) {
             for (const driver of drivers) {
                 allPossibleRoutes.push({
-                    driver: driver,
                     destination: destination,
+                    driver: driver,
                     suitabilityScore: this.calculateSuitabilityScore(destination, driver),
                 })
             }
