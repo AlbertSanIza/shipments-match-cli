@@ -12,7 +12,7 @@ export class RouteService {
                 allPossibleRoutes.push({
                     driver: driver,
                     destination: destination,
-                    suitabilityScore: this.calculateSuitabilityScore(driver, destination),
+                    suitabilityScore: this.calculateSuitabilityScore(destination, driver),
                 })
             }
         }
