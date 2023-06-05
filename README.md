@@ -111,7 +111,7 @@ $ shipments-match-cli <destinations_file_path> <drivers_file_path> --version_two
 # Run latest source code (before "yarn build")
 $ yarn ts-node src/main.ts <destinations_file_path> <drivers_file_path>
 
-# Hot reload (using nodemon)
+# Hot reload (using nodemon and the example_files)
 $ yarn start
 ```
 
