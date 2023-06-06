@@ -16,7 +16,7 @@
         "ignore": [
             "src/**/*.spec.ts"
         ],
-        "exec": "clear && yarn example"
+        "exec": "yarn example"
     },
     "scripts": {
         "build": "nest build",
